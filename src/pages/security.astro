@@ -1,0 +1,54 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+
+const principles = [
+  { t: 'Your model stays in your account', d: 'For checks and audits you run our engine on your own instance and share only the report. No production credentials, ever.' },
+  { t: 'NDA before details', d: 'We sign a mutual NDA before reviewing models, code, or infrastructure details.' },
+  { t: 'Minimum necessary access', d: 'We agree up front which models, data, logs, and environments are needed - and nothing more.' },
+  { t: 'Your IP stays yours', d: 'Your models, data, and results remain your property. What happens to shared artifacts at the end of an engagement is agreed in writing.' },
+  { t: 'Reproducible results', d: 'Test conditions and assumptions are documented so your team can review and repeat every measurement.' },
+  { t: 'Nothing kept longer than needed', d: 'Any files you share are deleted within 7 days of delivery unless you ask us in writing to keep them.' },
+];
+---
+<BaseLayout title="Security & Model IP Protection | InferEdgeLab" description="How InferEdgeLab protects customer models, data, and infrastructure during AI inference and GPU optimization engagements.">
+  <Header />
+  <main>
+    <section class="page-hero">
+      <div class="container">
+        <div class="eyebrow">SECURITY &amp; TRUST</div>
+        <h1>Your models are your competitive edge. We treat them that way.</h1>
+        <p>Every deployment has its own data, infrastructure, and compliance needs. We agree a clear engagement boundary before any work begins.</p>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="container grid reveal-stagger">
+        {principles.map((p) => (
+          <article class="card item">
+            <span class="check" aria-hidden="true">✓</span>
+            <h2>{p.t}</h2>
+            <p>{p.d}</p>
+          </article>
+        ))}
+      </div>
+      <div class="container">
+        <p class="note">Have specific security or compliance requirements? <a href="/contact">Tell us</a> and we will address them before the engagement starts.</p>
+      </div>
+    </section>
+  </main>
+  <Footer />
+</BaseLayout>
+
+<style>
+.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+.item{padding:26px}
+.check{width:30px;height:30px;border-radius:9px;background:#fff0eb;color:#d4553a;display:grid;place-items:center;font-weight:800}
+.item h2{font:700 19px Manrope;margin:16px 0 8px}
+.item p{color:var(--muted);font-size:14px;line-height:1.7;margin:0}
+.note{color:var(--muted);font-size:14px;margin-top:30px}
+.note a{color:var(--blue);font-weight:700}
+@media(max-width:900px){.grid{grid-template-columns:1fr 1fr}}
+@media(max-width:600px){.grid{grid-template-columns:1fr}}
+</style>

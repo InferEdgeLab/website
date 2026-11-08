@@ -1,0 +1,129 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import { product } from '../data/site';
+
+// Keep this page outcome-focused. Do not describe internals, report formats, or methods.
+const questions = [
+  { q: 'Where is our inference budget actually going?', a: 'A clear, shared picture of performance and spend across your AI workloads.' },
+  { q: 'What should we fix first?', a: 'Prioritized next steps, ranked by the impact they are likely to have.' },
+  { q: 'Did the change pay off?', a: 'Confidence that improvements are real - and that they stay that way.' },
+];
+
+const audiences = [
+  { t: 'ML platform teams', d: 'Running many models and needing a consistent view of how they perform.' },
+  { t: 'AI product teams', d: 'Shipping features where response time shapes the user experience.' },
+  { t: 'Infrastructure & FinOps leads', d: 'Responsible for GPU budgets and capacity as AI usage grows.' },
+];
+---
+<BaseLayout title="InferEdge: Inference Benchmarking Engine | InferEdgeLab" description={`${product.name} by InferEdgeLab - ${product.oneLiner} It benchmarks your model on your own instance and turns the results into a costed plan.`}>
+  <Header />
+  <main>
+    <section class="page-hero">
+      <div class="container">
+        <span class="chip">{product.status}</span>
+        <h1>{product.name}</h1>
+        <p class="tagline">{product.oneLiner}</p>
+        <p class="team-note">Built and run by our <a href="/#team">two-engineer team</a>, covering runtime and GPU work and model-side optimization.</p>
+        <p>Know where your inference time and GPU spend go, and where to act first. {product.name} runs on your own instance, measures your model under realistic traffic, and only puts a dollar figure on changes it has actually measured.</p>
+        <div class="actions">
+          <a class="btn btn-primary" href="/contact?topic=check">Request a free GPU cost check →</a>
+          <a class="btn btn-secondary" href="/#pricing">See pricing</a>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="container">
+        <div class="section-head reveal-on-scroll">
+          <div>
+            <div class="eyebrow">WHAT IT HELPS YOU ANSWER</div>
+            <h2>Clarity before optimization.</h2>
+          </div>
+          <p>Teams rarely lack data about their AI systems. What they lack is a fast, trustworthy answer to a few key questions.</p>
+        </div>
+        <div class="questions reveal-stagger">
+          {questions.map((item, i) => (
+            <article class="card question">
+              <span class="qnum">0{i + 1}</span>
+              <h3>{item.q}</h3>
+              <p>{item.a}</p>
+            </article>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    <section class="section pale">
+      <div class="container">
+        <div class="section-head reveal-on-scroll">
+          <div>
+            <div class="eyebrow">BUILT FOR</div>
+            <h2>Teams running AI in production</h2>
+          </div>
+        </div>
+        <div class="audiences reveal-stagger">
+          {audiences.map((a) => (
+            <div class="audience">
+              <span class="check">✓</span>
+              <div><strong>{a.t}</strong><p>{a.d}</p></div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="how-you-get-it">
+      <div class="container">
+        <div class="partner reveal-on-scroll">
+          <div>
+            <div class="eyebrow">HOW YOU GET IT</div>
+            <h2 class="h2">Every engagement runs on {product.name}.</h2>
+            <p class="lead">You don't need to buy or install anything to start. {product.name} is how we deliver each step of an engagement.</p>
+            <ul>
+              <li>Free GPU cost check: a quick run on your own instance</li>
+              <li>Inference Cost Audit: the full benchmark and costed plan</li>
+              <li>Retainer: every new model version re-checked before it ships</li>
+            </ul>
+          </div>
+          <div class="nda card">
+            <span class="lock" aria-hidden="true">
+              <svg viewBox="0 0 24 24"><rect x="4" y="10" width="16" height="11" rx="2.5"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></svg>
+            </span>
+            <h3>Details under NDA</h3>
+            <p>Technical details and supported environments are shared with qualified teams under a mutual NDA.</p>
+            <a class="btn btn-primary" href="/contact?topic=check">Request a free GPU cost check →</a>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+  <Footer />
+</BaseLayout>
+
+<style>
+.page-hero .tagline{font:600 21px/1.5 Manrope,sans-serif;color:#3b2650;margin-bottom:14px}
+.team-note{font-size:13px;color:var(--muted);margin:0 0 18px}
+.team-note a{color:var(--blue);font-weight:700}
+.questions{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+.question{padding:26px}
+.qnum{font:700 12px Manrope;color:var(--blue)}
+.question h3{font:700 20px/1.3 Manrope;margin:14px 0 10px;letter-spacing:-.02em}
+.question p{color:var(--muted);font-size:14px;line-height:1.65;margin:0}
+.pale{background:#faf7fc;border-block:1px solid #edf1f8}
+.audiences{display:grid;grid-template-columns:repeat(3,1fr);gap:24px}
+.audience{display:flex;gap:12px;align-items:flex-start}
+.audience strong{font:700 17px Manrope}
+.audience p{color:var(--muted);font-size:14px;line-height:1.6;margin:6px 0 0}
+.check{flex:0 0 auto;width:20px;height:20px;border-radius:50%;background:#fff0eb;color:#d4553a;display:grid;place-items:center;font-weight:700;font-size:11px;margin-top:2px}
+.partner{display:grid;grid-template-columns:1.1fr .9fr;gap:56px;align-items:center}
+.partner ul{padding-left:20px;color:#4f5f7c;font-size:14px;line-height:2.1;margin:18px 0 0}
+.nda{padding:30px;background:linear-gradient(160deg,#fff,#f8f3fb)}
+.nda:hover{transform:none}
+.lock{width:48px;height:48px;border-radius:13px;background:#f3ecf9;display:grid;place-items:center}
+.lock svg{width:22px;height:22px;fill:none;stroke:var(--blue);stroke-width:1.8;stroke-linecap:round}
+.nda h3{font:700 21px Manrope;margin:18px 0 8px}
+.nda p{color:var(--muted);font-size:14px;line-height:1.65;margin:0 0 22px}
+@media(max-width:860px){.questions,.audiences{grid-template-columns:1fr}.partner{grid-template-columns:1fr;gap:30px}}
+</style>

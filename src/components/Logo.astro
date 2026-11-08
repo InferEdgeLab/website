@@ -1,0 +1,49 @@
+---
+/**
+ * Brand mark: two rising bars (measure, optimize) leading into a forward chevron (accelerate).
+ * Keep public/favicon.svg and public/social-card.svg in sync if this changes.
+ */
+import { site } from '../data/site';
+
+interface Props {
+  size?: number;
+  showName?: boolean;
+  tone?: 'dark' | 'light';
+}
+
+const { size = 36, showName = true, tone = 'dark' } = Astro.props;
+// Each instance needs its own gradient id so multiple logos on a page do not clash.
+const gradientId = `logo-grad-${Math.random().toString(36).slice(2, 8)}`;
+const base = site.name.replace(/Lab$/, '');
+const suffix = site.name.endsWith('Lab') ? 'Lab' : '';
+---
+<span class:list={['logo', `logo-${tone}`]}>
+  <svg class="logo-mark" width={size} height={size} viewBox="0 0 40 40" aria-hidden="true">
+    <defs>
+      <linearGradient id={gradientId} x1="2" y1="2" x2="38" y2="38" gradientUnits="userSpaceOnUse">
+        <stop stop-color="#5b2a86" />
+        <stop offset="1" stop-color="#ff7a59" />
+      </linearGradient>
+    </defs>
+    <rect x="1" y="1" width="38" height="38" rx="11" fill={`url(#${gradientId})`} />
+    <g fill="none" stroke="#fff" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round">
+      <path class="bar bar-1" d="M10 28v-5" />
+      <path class="bar bar-2" d="M16 28V16" />
+      <path class="chev" d="M22 12l8 8-8 8" />
+    </g>
+  </svg>
+  {showName && <span class="logo-name">{base}<b>{suffix}</b></span>}
+</span>
+
+<style>
+.logo{display:inline-flex;align-items:center;gap:10px;font:800 20px Manrope,sans-serif;letter-spacing:-.04em;white-space:nowrap}
+.logo-mark{flex:0 0 auto;border-radius:11px;box-shadow:0 6px 16px #5b2a8633;transition:transform .35s cubic-bezier(.2,.7,.2,1),box-shadow .35s ease}
+.logo-name{color:var(--ink)}
+.logo-name b{font-weight:800;background:linear-gradient(90deg,#5b2a86,#ff7a59);-webkit-background-clip:text;background-clip:text;color:transparent}
+.logo-light .logo-name{color:#fff}
+.chev,.bar{transition:transform .35s cubic-bezier(.2,.7,.2,1);transform-box:fill-box;transform-origin:bottom}
+:global(a:hover) > .logo .logo-mark{transform:rotate(-4deg) scale(1.04);box-shadow:0 10px 22px #5b2a8644}
+:global(a:hover) > .logo .chev{transform:translateX(2px)}
+:global(a:hover) > .logo .bar-1{transform:scaleY(1.35)}
+:global(a:hover) > .logo .bar-2{transform:scaleY(1.1)}
+</style>

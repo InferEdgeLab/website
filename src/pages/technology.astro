@@ -1,0 +1,51 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+
+const groups = [
+  { title: 'Models & formats', items: ['PyTorch', 'ONNX', 'Hugging Face', 'Detection, segmentation, classification', 'Image & text embeddings'] },
+  { title: 'Runtimes', items: ['TensorRT', 'ONNX Runtime', 'CUDA', 'OpenVINO (CPU)'] },
+  { title: 'Serving', items: ['Triton Inference Server', 'Docker', 'Kubernetes'] },
+  { title: 'Hardware & cloud', items: ['NVIDIA T4, L4, A10G, A100', 'AWS, Google Cloud, Azure', 'x86 CPU instances', 'NVIDIA Jetson (on request)'] },
+];
+---
+<BaseLayout title="TensorRT, ONNX Runtime & Triton Optimization | InferEdgeLab" description="The models, runtimes, serving stacks, and cloud GPUs our inference cost optimization work covers.">
+  <Header />
+  <main>
+    <section class="page-hero">
+      <div class="container">
+        <div class="eyebrow">TECHNOLOGY</div>
+        <h1>Work with the stack you already use.</h1>
+        <p>Inference cost is shaped by the whole path - model, runtime, serving layer, and the instance you pay for. We work across all of it, without locking you into a vendor.</p>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="container">
+        <div class="groups reveal-stagger">
+          {groups.map((g) => (
+            <div class="card group">
+              <h2>{g.title}</h2>
+              <ul>{g.items.map((item) => <li>{item}</li>)}</ul>
+            </div>
+          ))}
+        </div>
+        <p class="note">The right tools depend on your model, platform, and deployment constraints. Scope and compatibility are confirmed for each project. Most of our work today is on NVIDIA GPUs; other accelerators (AMD, Google Cloud TPU) are evaluated case by case. We specialize in vision and embedding models today - LLM / generative serving work is considered case by case.</p>
+      </div>
+    </section>
+  </main>
+  <Footer />
+</BaseLayout>
+
+<style>
+.groups{display:grid;grid-template-columns:repeat(4,1fr);gap:18px}
+.group{padding:24px}
+.group h2{font:700 13px Manrope;letter-spacing:.08em;text-transform:uppercase;color:var(--blue);margin:0 0 16px}
+.group ul{list-style:none;padding:0;margin:0;display:grid;gap:10px}
+.group li{font:700 15px Manrope;padding-bottom:10px;border-bottom:1px solid #f0f3f9}
+.group li:last-child{border-bottom:0;padding-bottom:0}
+.note{color:var(--muted);font-size:14px;line-height:1.7;margin-top:28px;max-width:700px}
+@media(max-width:960px){.groups{grid-template-columns:1fr 1fr}}
+@media(max-width:520px){.groups{grid-template-columns:1fr}}
+</style>

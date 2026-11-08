@@ -1,0 +1,19 @@
+# InferEdgeLab
+
+> InferEdgeLab is a GPU inference cost optimization service for AI models on cloud GPUs (AWS, Google Cloud, Azure), specializing in vision and embedding models, with LLM serving optimization on request.
+
+InferEdgeLab works with teams running AI models on cloud GPUs who want to serve the same traffic on fewer GPU-hours. There are three fixed-scope offers: a free GPU cost check, a $750 Inference Cost Audit (credited in full if the client proceeds to a sprint), and a Cost-Cut Sprint from $3,500 with the exact scope confirmed in writing before work starts. For the free check and the audit, the engine runs on the client's own cloud instance and the model never leaves their account. Cost-Cut Sprints are billed 50% upfront and 50% on delivery, with the second 50% waived if the agreed written target is missed. The specialization is vision and embedding models on NVIDIA cloud GPUs, with LLM serving optimization available on request and NVIDIA Jetson edge deployments on request. The team is two engineers: a runtime and GPU lead with 5+ years of experience in C++, CUDA and AI inference pipelines, and a model optimization lead with an M.Tech in AI/ML covering quantization, pruning and distillation. Contact: hello@inferedgelab.com.
+
+## Pages
+
+- [InferEdgeLab](https://inferedgelab.com/): Homepage - overview of GPU inference cost optimization services, pricing and outcomes.
+- [Services](https://inferedgelab.com/services): Services and pricing - inference cost audit, model optimization, GPU efficiency, serving & batching, regression checks, edge and LLM serving on request.
+- [InferEdge](https://inferedgelab.com/inferedge): The internal benchmarking engine behind every audit and sprint.
+- [Technology](https://inferedgelab.com/technology): The models, runtimes, serving stacks and cloud GPUs the optimization work covers.
+- [Security](https://inferedgelab.com/security): How InferEdgeLab protects customer models, data and infrastructure during engagements.
+- [Contact](https://inferedgelab.com/contact): Request a free GPU cost check, book an audit, or talk to the team.
+
+## Optional
+
+- [Privacy](https://inferedgelab.com/privacy): Privacy notice.
+- [Terms](https://inferedgelab.com/terms): Website terms.

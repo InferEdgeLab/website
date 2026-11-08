@@ -1,0 +1,54 @@
+---
+/**
+ * Anonymous, role-based team section (no names, no photos - see src/data/site.ts for why).
+ * Card text is intentionally literal, not generated, per the exact wording agreed for this section.
+ */
+const team = [
+  {
+    n: '01',
+    title: 'Runtime & GPU lead',
+    bio: 'Systems engineer with 5+ years in C++, CUDA and AI inference pipelines. NVIDIA DLI certified in CUDA and NPTEL-certified in GPU Architectures (IIT Kharagpur). Leads runtime, TensorRT and GPU profiling work.',
+    tags: ['C++', 'CUDA', 'TensorRT', 'GPU profiling'],
+  },
+  {
+    n: '02',
+    title: 'Model optimization lead',
+    bio: 'M.Tech in AI/ML. Leads model-side optimization (quantization, pruning and distillation) and makes sure every speed-up holds up on your own data.',
+    tags: ['Quantization', 'Pruning', 'Distillation', 'Accuracy validation'],
+  },
+];
+---
+<section class="section team" id="team">
+  <div class="container">
+    <div class="section-head reveal-on-scroll">
+      <div>
+        <div class="eyebrow">THE TEAM</div>
+        <h2>Two engineers, both sides of inference</h2>
+      </div>
+      <p>The people who run your benchmark are the people who do the optimization work. No account managers, no hand-offs.</p>
+    </div>
+    <div class="people reveal-stagger">
+      {team.map((member) => (
+        <article class="card person">
+          <span class="avatar" aria-hidden="true">{member.n}</span>
+          <div>
+            <h3>{member.title}</h3>
+            <p class="bio">{member.bio}</p>
+            <div class="tags">{member.tags.map((t) => <small>{t}</small>)}</div>
+          </div>
+        </article>
+      ))}
+    </div>
+  </div>
+</section>
+
+<style>
+.people{display:grid;grid-template-columns:repeat(2,1fr);gap:18px}
+.person{padding:26px;display:flex;gap:18px;align-items:flex-start}
+.avatar{flex:0 0 auto;width:56px;height:56px;border-radius:16px;display:grid;place-items:center;font:800 18px Manrope;color:#fff;background:linear-gradient(135deg,#5b2a86,#ff7a59)}
+.person h3{font:700 19px Manrope;margin:2px 0 4px}
+.bio{font-size:14px;line-height:1.65;color:var(--muted);margin:0 0 14px}
+.tags{display:flex;gap:8px;flex-wrap:wrap}
+.tags small{background:#f6f0fa;color:#5e4a72;border-radius:30px;padding:7px 10px;font-size:11px;font-weight:600}
+@media(max-width:760px){.people{grid-template-columns:1fr}}
+</style>

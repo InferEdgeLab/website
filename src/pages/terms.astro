@@ -1,0 +1,39 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import { site } from '../data/site';
+const updated = 'November 2026';
+---
+<BaseLayout title="Terms" description={`Terms of use for the ${site.name} website.`}>
+  <Header />
+  <main class="container legal">
+    <div class="eyebrow">LEGAL</div>
+    <h1>Website terms</h1>
+    <p class="muted">Last updated: {updated}</p>
+
+    <h2>About this website</h2>
+    <p>This website describes the services offered by {site.name}. Its content is general information, not an offer, and not a guarantee of any performance, cost saving, or business outcome.</p>
+
+    <h2>Prices and engagements</h2>
+    <p>Prices shown are in US dollars, exclude taxes applicable in your jurisdiction, and may change. Prices marked "from" or with an asterisk depend on the scope of your engagement and are confirmed in writing before work starts. Unless stated otherwise, our fees cover our services only - any cloud GPU usage during an engagement is billed to you directly by your own cloud provider, separately from our fee. Every engagement is governed by a written statement of work agreed before work starts, which sets the scope, price, targets, and payment terms. If anything on this website differs from a signed statement of work, the statement of work applies.</p>
+
+    <h2>Benchmarks and examples</h2>
+    <p>Benchmarks, examples, and illustrations on this website reflect specific models, hardware, software versions, and test conditions. Results for your workload will differ and are confirmed only by measuring it.</p>
+
+    <h2>Intellectual property</h2>
+    <p>Website text, design, and original materials belong to {site.name}. Product and company names mentioned are the property of their owners and are used only to describe compatibility.</p>
+
+    <h2>Links</h2>
+    <p>We are not responsible for the content of third-party websites linked from this site.</p>
+
+    <h2>Governing law</h2>
+    <p>These terms, and any dispute about this website, are governed by the laws of India, without regard to conflict-of-laws rules. This does not affect the governing law and jurisdiction clause of a separately signed statement of work, which applies instead for that engagement.</p>
+
+    <h2>Contact</h2>
+    <p>Questions about these terms can be sent to <a href={`mailto:${site.email}`}>{site.email}</a>.</p>
+  </main>
+  <Footer />
+</BaseLayout>
+
+<style>.legal{padding-top:70px;padding-bottom:80px;max-width:850px}.legal h1{font:800 44px Manrope;letter-spacing:-.05em;margin:12px 0 6px}.legal h2{font:700 20px Manrope;margin-top:34px}.legal p{font-size:14px;line-height:1.8;color:#596782}.legal a{color:var(--blue)}</style>

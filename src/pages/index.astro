@@ -1,0 +1,375 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import Pricing from '../components/Pricing.astro';
+import CaseStudies from '../components/CaseStudies.astro';
+import Founders from '../components/Founders.astro';
+import { site, entity, capabilities, product, bookingHref } from '../data/site';
+
+const ecosystem = ['PyTorch', 'ONNX', 'ONNX Runtime', 'TensorRT', 'CUDA', 'Triton', 'AWS', 'Google Cloud', 'Azure'];
+
+// Abstract compute grid for the hero visual. Purely decorative; no data.
+const cells = Array.from({ length: 48 }, (_, i) => i);
+
+const outcomes = [
+  { title: 'Lower latency', text: 'Faster responses where users feel them - including the slow tail, not just the average.' },
+  { title: 'Higher throughput', text: 'Serve more requests on the hardware you already pay for.' },
+  { title: 'Better GPU utilization', text: 'Less idle silicon, fewer over-provisioned instances, smarter capacity plans.' },
+  { title: 'Lower cost per inference', text: 'A unit cost that makes sense as your AI usage grows.' },
+];
+
+// Mirrors the brand tagline. Describes how we engage, not how InferEdge works.
+const steps = [
+  { n: '01', t: 'Measure', icon: 'M5 19V13M11 19V8M17 19V4', d: 'Establish a trusted baseline for latency, throughput, utilization, and cost on your real workload.' },
+  { n: '02', t: 'Optimize', icon: 'M4 12h4l3-7 4 14 3-7h2', d: 'Apply the highest-impact changes across model, runtime, serving, and hardware - each one checked against the baseline.' },
+  { n: '03', t: 'Accelerate', icon: 'M5 5l7 7-7 7M12 5l7 7-7 7', d: 'Ship the gains to production, keep them there, and scale with confidence.' },
+];
+
+const reasons = [
+  { t: 'Vendor-neutral', d: 'We recommend what fits your workload, not a particular cloud or chip.' },
+  { t: 'Measured, not guessed', d: 'Every recommendation is tied to a baseline you can re-run.' },
+  { t: 'Your model stays in your account', d: 'Free checks and audits run in your own cloud account. Sprint access is scoped and agreed under NDA.' },
+  { t: 'Built to transfer', d: 'Your engineers own the result when the engagement ends.' },
+];
+---
+
+<BaseLayout title="InferEdgeLab | GPU Inference Cost Optimization" description={entity.SHORT} offers={true}>
+  <Header />
+  <main>
+    <section class="hero">
+      <div class="hero-bg" aria-hidden="true"><span class="blob b1"></span><span class="blob b2"></span><span class="blob b3"></span></div>
+      <div class="container hero-grid">
+        <div class="hero-copy load-in">
+          <h1>{site.hero.title} <span class="grad-text">{site.hero.titleAccent}</span></h1>
+          <p>{site.hero.body}</p>
+          <div class="actions">
+            <a class="btn btn-primary" href={site.hero.primaryCta.href}>{site.hero.primaryCta.label} <span>→</span></a>
+            <a class="btn btn-secondary" href={site.hero.secondaryCta.href}>{site.hero.secondaryCta.label}</a>
+          </div>
+          <ul class="trust-list">
+            <li><span class="check">✓</span>Cloud GPUs on AWS, GCP &amp; Azure</li>
+            <li><span class="check">✓</span>Vision &amp; embedding models</li>
+            <li><span class="check">✓</span>Your model stays in your account</li>
+          </ul>
+        </div>
+
+        <div class="visual-wrap"><div class="visual card" aria-hidden="true">
+          <div class="visual-top">
+            <span class="dots"><i></i><i></i><i></i></span>
+            <span>COMPUTE EFFICIENCY</span>
+            <span class="live">● ILLUSTRATIVE</span>
+          </div>
+          <div class="visual-body">
+            <div class="gpu-grid">
+              {cells.map((i) => <span class={`cell c${i % 7}`} style={`--d:${(i * 137) % 2400}ms`}></span>)}
+            </div>
+            <div class="bars">
+              <div class="bar-row"><span>Latency</span><div class="track"><b class="down"></b></div><em>↓</em></div>
+              <div class="bar-row"><span>Throughput</span><div class="track"><b class="up"></b></div><em>↑</em></div>
+              <div class="bar-row"><span>GPU utilization</span><div class="track"><b class="up alt"></b></div><em>↑</em></div>
+              <div class="bar-row"><span>Cost / inference</span><div class="track"><b class="down alt"></b></div><em>↓</em></div>
+            </div>
+          </div>
+        </div></div>
+      </div>
+    </section>
+
+    <section class="ecosystem" aria-label="Technologies we work with">
+      <div class="container ecosystem-inner">
+        <span class="ecosystem-label">WORKS WITH THE STACK YOU ALREADY USE</span>
+        <div class="marquee">
+          <div class="marquee-track">
+            {[0, 1].map((copy) => (
+              <div class="marquee-group" aria-hidden={copy === 1 ? 'true' : undefined}>
+                {ecosystem.map((name) => <span class="eco">{name}</span>)}
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="container">
+        <div class="section-head reveal-on-scroll">
+          <div>
+            <div class="eyebrow">WHAT WE DO</div>
+            <h2>Engineering for fast, efficient AI</h2>
+          </div>
+          <p>Focused help wherever inference time and compute spend add up - from a single model to a production fleet.</p>
+        </div>
+
+        <div class="cap-grid reveal-stagger">
+          {capabilities.map((item) => (
+            <a class="cap-card card" href={`/services#${item.id}`}>
+              <div class="cap-top">
+                <span>{item.number}</span>
+                <span class="cap-icon" aria-hidden="true">{item.icon}</span>
+              </div>
+              <h3>{item.title}</h3>
+              <p>{item.text}</p>
+              <span class="more">Learn more <span>→</span></span>
+            </a>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    <CaseStudies />
+
+    <section class="section outcomes-wrap">
+      <div class="container">
+        <div class="section-head reveal-on-scroll">
+          <div>
+            <div class="eyebrow">WHAT WE OPTIMIZE FOR</div>
+            <h2>Outcomes your team and your CFO can see</h2>
+          </div>
+          <p>Every engagement starts with the metrics that matter to your product and your budget.</p>
+        </div>
+        <div class="outcomes reveal-stagger">
+          {outcomes.map((o) => (
+            <article class="outcome">
+              <h3>{o.title}</h3>
+              <p>{o.text}</p>
+            </article>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    <section class="platform">
+      <div class="container platform-grid reveal-on-scroll">
+        <div>
+          <span class="chip">{product.status}</span>
+          <h2>{product.name}</h2>
+          <p class="platform-lead">{product.oneLiner}</p>
+          <p>Our in-house engine benchmarks your model under realistic traffic, checks accuracy after every change, and turns the results into a costed plan. It runs on your own instance, so your model never leaves your account.</p>
+          <div class="platform-actions">
+            <a class="btn btn-primary" href="/contact?topic=check">Request a free GPU cost check →</a>
+            <a class="btn btn-ghost" href={product.href}>Learn more</a>
+          </div>
+        </div>
+
+        <div class="locked" aria-hidden="true">
+          <div class="locked-blur">
+            <div class="ph ph-a"></div>
+            <div class="ph-row"><div class="ph"></div><div class="ph"></div><div class="ph"></div></div>
+            <div class="ph ph-b"></div>
+            <div class="ph ph-c"></div>
+          </div>
+          <div class="locked-badge">
+            <span class="lock">
+              <svg viewBox="0 0 24 24"><rect x="4" y="10" width="16" height="11" rx="2.5"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></svg>
+            </span>
+            <strong>Details under NDA</strong>
+            <small>Technical details and supported environments are shared with qualified teams under a mutual NDA.</small>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="container">
+        <div class="section-head reveal-on-scroll">
+          <div>
+            <div class="eyebrow">HOW WE WORK</div>
+            <h2>Three steps, one baseline</h2>
+          </div>
+          <p>Every engagement follows the same simple promise - so you always know what you will get and when.</p>
+        </div>
+
+        <div class="steps reveal-stagger">
+          {steps.map((s) => (
+            <article class="step card">
+              <div class="step-top">
+                <span class="step-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d={s.icon} /></svg></span>
+                <span class="step-n">{s.n}</span>
+              </div>
+              <h3>{s.t}</h3>
+              <p>{s.d}</p>
+            </article>
+          ))}
+        </div>
+
+        <div class="reasons reveal-stagger">
+          {reasons.map((r) => (
+            <div class="reason">
+              <span class="check">✓</span>
+              <div><strong>{r.t}</strong><p>{r.d}</p></div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    <Founders />
+
+    <Pricing />
+
+    <section class="cta-wrap">
+      <div class="container">
+        <div class="cta-card reveal-on-scroll">
+          <div>
+            <div class="eyebrow">START A CONVERSATION</div>
+            <h2>Spending too much on inference?</h2>
+            <p>Tell us about your model, traffic, and GPU bill. We will tell you honestly where we think the gains are - and whether we can help.</p>
+          </div>
+          <div class="cta-actions">
+            <a class="btn btn-primary" href="/contact?topic=check">Get a free GPU cost check →</a>
+            <a class="btn btn-secondary" href={bookingHref}>Book a 20-minute call</a>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+  <Footer />
+</BaseLayout>
+
+<style>
+.hero{position:relative;overflow:hidden;padding:84px 0 84px;background:linear-gradient(110deg,#fcfafd,#f8f4fb 72%,#fff)}
+.hero-bg{position:absolute;inset:0;pointer-events:none;background-image:radial-gradient(#5b2a861f 1px,transparent 1px);background-size:22px 22px;-webkit-mask-image:radial-gradient(ellipse at 70% 40%,#000 0,transparent 65%);mask-image:radial-gradient(ellipse at 70% 40%,#000 0,transparent 65%)}
+.blob{position:absolute;border-radius:50%;filter:blur(70px);opacity:.75;animation:drift 18s ease-in-out infinite alternate}
+.b1{width:460px;height:460px;right:4%;top:-140px;background:#ddcbee}
+.b2{width:340px;height:340px;right:30%;bottom:-180px;background:#ffd6c9;animation-delay:-6s}
+.b3{width:260px;height:260px;left:-80px;top:30%;background:#ebdff5;animation-delay:-12s}
+.hero-grid{position:relative;z-index:1}
+.hero-grid>*{min-width:0}
+.hero-grid{display:grid;grid-template-columns:1fr 1fr;align-items:center;gap:56px}
+.hero h1{font:800 clamp(40px,5.2vw,64px)/1.04 Manrope,sans-serif;letter-spacing:-.055em;margin:24px 0 18px;max-width:600px}
+.hero h1 .grad-text{display:inline-block;padding-bottom:.06em}
+.hero-copy>p{font-size:17px;line-height:1.7;color:var(--muted);max-width:540px;margin:0}
+.actions{display:flex;gap:12px;margin-top:28px;flex-wrap:wrap}
+.trust-list{list-style:none;padding:0;margin:28px 0 0;display:flex;flex-wrap:wrap;gap:10px 22px;color:#5f6c86;font-size:13px}
+.trust-list li{display:flex;align-items:center;gap:8px}
+.check{flex:0 0 auto;width:19px;height:19px;border-radius:50%;background:#fff0eb;color:#d4553a;display:grid;place-items:center;font-weight:700;font-size:11px}
+
+.visual-wrap{animation:rise 1s .25s var(--ease) both}
+.visual{overflow:hidden;box-shadow:0 28px 70px rgba(60,30,90,.16),0 5px 16px rgba(60,30,90,.06);animation:float 7s ease-in-out 1.3s infinite}
+.visual:hover{transform:none}
+@keyframes float{50%{transform:translateY(-10px)}}
+.visual-top{height:43px;background:#fcfafd;border-bottom:1px solid var(--line);display:flex;align-items:center;padding:0 16px;gap:13px;color:#8793aa;font-size:9px;letter-spacing:.08em;font-weight:700}
+.dots{display:flex;gap:5px}
+.dots i{width:8px;height:8px;background:#ff7069;border-radius:50%}
+.dots i:nth-child(2){background:#ffc24b}
+.dots i:nth-child(3){background:#27c994}
+.live{margin-left:auto;color:#d4553a}
+.visual-body{padding:24px}
+.gpu-grid{display:grid;grid-template-columns:repeat(12,1fr);gap:6px;padding:16px;border:1px solid #edf1f8;border-radius:12px;background:#fbf8fd}
+.cell{aspect-ratio:1;border-radius:4px;background:#ece3f5;animation:pulse 2.4s ease-in-out infinite;animation-delay:var(--d)}
+.cell.c1,.cell.c4{background:#6a3596}
+.cell.c2{background:#c4a3e6}
+.cell.c5{background:#ff7a59}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.45}}
+.bars{display:grid;gap:13px;margin-top:22px}
+.bar-row{display:grid;grid-template-columns:110px 1fr 16px;align-items:center;gap:12px;font-size:11px;color:#69768f;font-weight:600}
+.bar-row em{font-style:normal;font-weight:800;color:#d4553a}
+.track{height:8px;border-radius:8px;background:#eef2fb;overflow:hidden}
+.track b{display:block;height:100%;border-radius:8px;background:linear-gradient(90deg,#5b2a86,#c4a3e6);animation:grow 1.6s cubic-bezier(.2,.7,.2,1) both}
+.track b.up{width:82%}
+.track b.down{width:34%}
+.track b.alt{background:linear-gradient(90deg,#ff7a59,#ffab92)}
+@keyframes grow{from{width:0}}
+
+.ecosystem{padding:26px 0 30px;border-bottom:1px solid #edf1f8;background:#fff}
+.ecosystem-inner{display:flex;align-items:center;gap:34px}
+.ecosystem-label{flex:0 0 auto;color:#8a96ad;font-size:9px;font-weight:800;letter-spacing:.14em}
+.marquee{flex:1;min-width:0;overflow:hidden;-webkit-mask-image:linear-gradient(90deg,transparent,#000 12%,#000 88%,transparent);mask-image:linear-gradient(90deg,transparent,#000 12%,#000 88%,transparent)}
+.marquee-track{display:flex;width:max-content;animation:marquee 28s linear infinite}
+.marquee:hover .marquee-track{animation-play-state:paused}
+.marquee-group{display:flex;gap:56px;padding-right:56px}
+@keyframes marquee{to{transform:translateX(-50%)}}
+.eco{font:700 16px Manrope,sans-serif;letter-spacing:-.03em;color:#7a869c;transition:color .2s;white-space:nowrap}
+.eco:hover{color:var(--ink)}
+
+.cap-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+.cap-card{padding:24px;display:flex;flex-direction:column}
+.cap-top{display:flex;justify-content:space-between;align-items:center;color:#9aa6bd;font-size:12px;font-weight:700}
+.cap-icon{width:42px;height:42px;border-radius:12px;background:#f3ecf9;color:#5b2a86;display:grid;place-items:center;font-size:22px}
+.cap-card h3{font:700 19px Manrope;margin:20px 0 9px}
+.cap-card p{font-size:13.5px;line-height:1.65;color:var(--muted);margin:0 0 18px;flex:1}
+.more{font-size:12px;font-weight:700;color:var(--blue)}
+.more span{display:inline-block;margin-left:4px;transition:transform .2s}
+.cap-card:hover .more span{transform:translateX(4px)}
+
+.outcomes-wrap{background:#fcfafd;border-top:1px solid #edf1f8}
+.outcomes{display:grid;grid-template-columns:repeat(4,1fr);gap:18px}
+.outcome{padding:24px;border-radius:14px;background:#fff;border:1px solid var(--line);border-top:3px solid var(--blue)}
+.outcome:nth-child(even){border-top-color:var(--mint)}
+.outcome h3{font:700 18px Manrope;margin:0 0 10px}
+.outcome p{font-size:13px;line-height:1.65;color:var(--muted);margin:0}
+
+.platform{padding:88px 0;background:radial-gradient(ellipse at 90% 0%,#4a2370 0,transparent 50%),#1a1024;color:#fff}
+.platform-grid{display:grid;grid-template-columns:1fr 1fr;gap:64px;align-items:center}
+.platform .chip{background:#ff7a5926;color:#ffb199}
+.platform h2{font:800 clamp(34px,4vw,48px)/1.1 Manrope;letter-spacing:-.045em;margin:18px 0 10px}
+.platform-lead{font:600 19px/1.5 Manrope;color:#e5d6f2 !important;margin:0 0 14px}
+.platform p{color:#bfb0cc;line-height:1.7;font-size:15px;max-width:520px}
+.platform-actions{display:flex;gap:12px;flex-wrap:wrap;margin-top:26px}
+.btn-ghost{border-color:#ffffff33;color:#fff}
+.btn-ghost:hover{border-color:#fff}
+.locked{position:relative;border-radius:16px;border:1px solid #ffffff1f;background:#ffffff0a;padding:26px;overflow:hidden;min-height:300px}
+.locked-blur{display:grid;gap:14px;filter:blur(6px);opacity:.55}
+.locked::after{content:'';position:absolute;inset:0;background:linear-gradient(105deg,transparent 35%,#ffffff14 50%,transparent 65%);background-size:250% 100%;animation:sheen 4.5s ease-in-out infinite;pointer-events:none}
+@keyframes sheen{from{background-position:120% 0}to{background-position:-120% 0}}
+.ph{height:20px;border-radius:8px;background:linear-gradient(90deg,#5b2a8666,#c4a3e633)}
+.ph-a{width:55%}
+.ph-row{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+.ph-row .ph{height:70px;background:#ffffff1a}
+.ph-b{height:110px;background:linear-gradient(180deg,#ff7a5940,#5b2a8622)}
+.ph-c{width:75%}
+.locked-badge{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;gap:8px;padding:24px}
+.lock{width:52px;height:52px;border-radius:14px;background:#ffffff14;border:1px solid #ffffff2a;display:grid;place-items:center;margin-bottom:6px}
+.lock svg{width:24px;height:24px;fill:none;stroke:#fff;stroke-width:1.8;stroke-linecap:round}
+.locked-badge strong{font:700 18px Manrope}
+.locked-badge small{color:#bfb0cc;font-size:13px;max-width:260px;line-height:1.55}
+
+.steps{position:relative;display:grid;grid-template-columns:repeat(3,1fr);gap:22px}
+.steps::before{content:'';position:absolute;left:8%;right:8%;top:52px;height:2px;background:linear-gradient(90deg,#5b2a86,#ff7a59);transform:scaleX(0);transform-origin:left;transition:transform 1.4s var(--ease) .3s;z-index:0}
+.steps.is-visible::before{transform:scaleX(1)}
+.step{padding:28px;z-index:1}
+.step-top{display:flex;justify-content:space-between;align-items:center}
+.step-icon{width:48px;height:48px;border-radius:14px;display:grid;place-items:center;background:linear-gradient(135deg,#5b2a86,#ff7a59);box-shadow:0 8px 20px #5b2a8633}
+.step-icon svg{width:24px;height:24px;fill:none;stroke:#fff;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}
+.step-n{font:800 34px Manrope;color:#eef2fb;letter-spacing:-.04em}
+.step h3{font:800 22px Manrope;margin:20px 0 8px;letter-spacing:-.03em}
+.step p{font-size:14px;color:var(--muted);line-height:1.65;margin:0}
+.reasons{display:grid;grid-template-columns:repeat(4,1fr);gap:18px;margin-top:34px;padding-top:30px;border-top:1px solid var(--line)}
+.reason{display:flex;gap:11px;align-items:flex-start}
+.reason strong{font:700 15px Manrope}
+.reason p{font-size:13px;color:var(--muted);line-height:1.55;margin:5px 0 0}
+
+.cta-wrap{padding:0 0 84px}
+.cta-card{border:1px solid #ece4f3;border-radius:18px;background:linear-gradient(110deg,#f9f5fc,#f4eefa);padding:36px 42px;display:flex;align-items:center;justify-content:space-between;gap:30px;box-shadow:0 12px 32px rgba(46,20,70,.065)}
+.cta-card h2{font:800 30px/1.15 Manrope;letter-spacing:-.045em;margin:10px 0}
+.cta-card p{color:var(--muted);line-height:1.7;font-size:14px;max-width:620px;margin:0}
+.cta-actions{display:flex;flex-direction:column;gap:10px}
+.cta-card .btn{white-space:nowrap}
+
+@media(max-width:960px){
+  .hero-grid,.platform-grid{grid-template-columns:1fr;gap:38px}
+  .visual{max-width:640px}
+  .cap-grid{grid-template-columns:1fr 1fr}
+  .outcomes,.reasons{grid-template-columns:1fr 1fr}
+  .steps{grid-template-columns:1fr}
+  .steps::before{display:none}
+}
+@media(max-width:760px){
+  .ecosystem-inner{display:block}
+  .ecosystem-label{display:block;text-align:center;margin-bottom:16px}
+
+}
+@media(max-width:600px){
+  .hero{padding:56px 0}
+  .hero h1{font-size:40px}
+  .hero-copy>p{font-size:15px}
+  .visual-body{padding:14px}
+  .gpu-grid{gap:4px;padding:10px}
+  .bar-row{grid-template-columns:96px 1fr 14px;font-size:10px}
+  .cap-grid,.outcomes,.steps,.reasons{grid-template-columns:1fr}
+  .platform{padding:60px 0}
+  .cta-card{padding:26px;align-items:flex-start;flex-direction:column}
+  .cta-wrap{padding-bottom:56px}
+}
+@media(prefers-reduced-motion:reduce){.marquee-track{flex-wrap:wrap;width:auto;justify-content:center}.marquee-group[aria-hidden]{display:none}.marquee{-webkit-mask-image:none;mask-image:none}}
+</style>

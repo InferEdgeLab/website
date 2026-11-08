@@ -1,0 +1,274 @@
+---
+import '@fontsource/dm-sans/400.css';
+import '@fontsource/dm-sans/500.css';
+import '@fontsource/dm-sans/600.css';
+import '@fontsource/dm-sans/700.css';
+import '@fontsource/manrope/400.css';
+import '@fontsource/manrope/500.css';
+import '@fontsource/manrope/600.css';
+import '@fontsource/manrope/700.css';
+import '@fontsource/manrope/800.css';
+import { site, entity, sameAsUrls, orgKnowsAbout, cloudflareAnalyticsToken } from '../data/site';
+const {
+  title = site.seo.defaultTitle,
+  description = site.seo.defaultDescription,
+  canonical,
+  ogImage = site.seo.ogImage,
+  // Set true only on pages that sell something directly (home, /services) to add
+  // ProfessionalService + Offers to the JSON-LD graph below.
+  offers = false,
+} = Astro.props;
+const pageTitle = title.includes(site.name) ? title : `${title} | ${site.name}`;
+// Clean canonical paths: /services, not /services.html (GitHub Pages serves both).
+const cleanPath = Astro.url.pathname.replace(/\.html$/, '').replace(/\/index$/, '/') || '/';
+const canonicalUrl = canonical ?? new URL(cleanPath, site.url).toString();
+
+// Single @graph per page: shared Organization/WebSite nodes (by @id) plus a page-specific
+// WebPage node, and ProfessionalService + Offers on the pages that sell something directly.
+const orgId = `${entity.URL}/#org`;
+const websiteId = `${entity.URL}/#website`;
+
+const jsonLdGraph: Record<string, unknown>[] = [
+  {
+    '@type': 'Organization',
+    '@id': orgId,
+    name: entity.NAME,
+    url: entity.URL,
+    logo: `${entity.URL}/logo.png`,
+    email: entity.EMAIL,
+    description: entity.SHORT,
+    slogan: site.tagline,
+    areaServed: 'Worldwide',
+    numberOfEmployees: { '@type': 'QuantitativeValue', value: 2 },
+    knowsAbout: orgKnowsAbout,
+    ...(sameAsUrls.length ? { sameAs: sameAsUrls } : {}),
+  },
+  {
+    '@type': 'WebSite',
+    '@id': websiteId,
+    url: entity.URL,
+    name: entity.NAME,
+    publisher: { '@id': orgId },
+  },
+  {
+    '@type': 'WebPage',
+    url: canonicalUrl,
+    name: pageTitle,
+    description,
+    isPartOf: { '@id': websiteId },
+    about: { '@id': orgId },
+  },
+];
+
+if (offers) {
+  jsonLdGraph.push({
+    '@type': 'ProfessionalService',
+    provider: { '@id': orgId },
+    name: 'InferEdgeLab inference cost optimization',
+    serviceType: 'AI inference and GPU cost optimization',
+    areaServed: 'Worldwide',
+    hasOfferCatalog: {
+      '@type': 'OfferCatalog',
+      name: 'InferEdgeLab pricing',
+      itemListElement: [
+        {
+          '@type': 'Offer',
+          name: 'Free GPU Cost Check',
+          priceCurrency: 'USD',
+          price: 0,
+          url: `${entity.URL}/contact?topic=check`,
+        },
+        {
+          '@type': 'Offer',
+          name: 'Inference Cost Audit',
+          priceCurrency: 'USD',
+          price: 750,
+          url: `${entity.URL}/contact?topic=audit`,
+        },
+        {
+          '@type': 'Offer',
+          name: 'Cost-Cut Sprint',
+          priceSpecification: {
+            '@type': 'PriceSpecification',
+            priceCurrency: 'USD',
+            minPrice: 3500,
+          },
+          url: `${entity.URL}/contact?topic=sprint`,
+        },
+      ],
+    },
+  });
+}
+
+const jsonLd = { '@context': 'https://schema.org', '@graph': jsonLdGraph };
+---
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#ffffff" />
+    <meta name="referrer" content="strict-origin-when-cross-origin" />
+    <title>{pageTitle}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonicalUrl} />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content={site.name} />
+    <meta property="og:title" content={pageTitle} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonicalUrl} />
+    <meta property="og:image" content={new URL(ogImage, site.url).toString()} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content={`${site.name}: ${site.tagline}`} />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={pageTitle} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={new URL(ogImage, site.url).toString()} />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    {cloudflareAnalyticsToken && (
+      <script is:inline defer src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon={JSON.stringify({ token: cloudflareAnalyticsToken })}></script>
+    )}
+    <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />
+  </head>
+  <body>
+    <div class="scroll-progress" aria-hidden="true"></div>
+    <slot />
+    <script>
+      const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+      // Reveal sections as they scroll into view.
+      const targets = document.querySelectorAll('.reveal-on-scroll, .reveal-stagger');
+      if (!reduceMotion && 'IntersectionObserver' in window) {
+        const observer = new IntersectionObserver((entries, currentObserver) => {
+          entries.forEach((entry) => {
+            if (entry.isIntersecting) {
+              entry.target.classList.add('is-visible');
+              currentObserver.unobserve(entry.target);
+            }
+          });
+        }, { threshold: 0.12, rootMargin: '0px 0px -36px 0px' });
+        targets.forEach((target) => observer.observe(target));
+      } else {
+        targets.forEach((el) => el.classList.add('is-visible'));
+      }
+
+      // Soft spotlight that follows the cursor across cards (mouse/trackpad only).
+      if (!reduceMotion && window.matchMedia('(hover: hover)').matches) {
+        document.addEventListener('pointermove', (event) => {
+          const card = (event.target as Element | null)?.closest?.<HTMLElement>('.card');
+          if (!card) return;
+          const rect = card.getBoundingClientRect();
+          card.style.setProperty('--mx', `${event.clientX - rect.left}px`);
+          card.style.setProperty('--my', `${event.clientY - rect.top}px`);
+        }, { passive: true });
+      }
+    </script>
+  </body>
+</html>
+
+<style is:global>
+:root{font-family:'DM Sans',sans-serif;color:#1e1428;background:#fff;font-synthesis:none;text-rendering:optimizeLegibility;--ink:#1e1428;--muted:#6b5f78;--line:#e4eaf3;--blue:#5b2a86;--pale:#f8f3fb;--mint:#ff7a59;--ease:cubic-bezier(.2,.7,.2,1)}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0}
+a{color:inherit;text-decoration:none}
+button,input,select,textarea{font:inherit}
+::selection{background:#e9dcf4;color:#2e1446}
+:focus-visible{outline:2px solid var(--blue);outline-offset:3px;border-radius:4px}
+.container{width:min(1160px,calc(100% - 48px));margin-inline:auto}
+.muted{color:var(--muted)}
+.eyebrow{font-size:11px;font-weight:700;letter-spacing:.17em;color:#6f5f82;text-transform:uppercase}
+.section{padding:88px 0}
+.section-head{display:flex;align-items:end;justify-content:space-between;gap:24px;margin-bottom:30px}
+.section-head h2{font:800 clamp(27px,3vw,38px)/1.15 Manrope,sans-serif;letter-spacing:-.04em;margin:10px 0 0}
+.section-head p{max-width:470px;color:var(--muted);line-height:1.65;margin:0}
+.h2{font:800 clamp(27px,3vw,36px)/1.15 Manrope,sans-serif;letter-spacing:-.04em;margin:10px 0 14px}
+.lead{color:var(--muted);font-size:16px;line-height:1.7;max-width:700px}
+.grad-text{background:linear-gradient(90deg,#5b2a86,#ff7a59,#5b2a86);background-size:200% 100%;-webkit-background-clip:text;background-clip:text;color:transparent;animation:grad-shift 6s ease-in-out infinite}
+@keyframes grad-shift{50%{background-position:100% 0}}
+
+/* Buttons */
+.btn{position:relative;overflow:hidden;display:inline-flex;align-items:center;justify-content:center;gap:10px;padding:13px 19px;border-radius:10px;font-weight:700;font-size:14px;transition:transform .2s var(--ease),box-shadow .2s ease,background .2s ease,border-color .2s ease,color .2s ease;border:1px solid transparent}
+.btn:active{transform:scale(.98)}
+.btn-primary{background:linear-gradient(135deg,#6a3596,#4a1f70);color:#fff;box-shadow:0 8px 20px #5b2a8633}
+.btn-primary:hover{transform:translateY(-2px);box-shadow:0 14px 28px #5b2a8640}
+.btn-primary::after{content:'';position:absolute;top:0;bottom:0;left:-60%;width:40%;background:linear-gradient(100deg,transparent,#ffffff55,transparent);transform:skewX(-20deg);transition:left .6s var(--ease)}
+.btn-primary:hover::after{left:130%}
+.btn-secondary{border-color:#cbd5e5;background:#fff;color:var(--ink)}
+.btn-secondary:hover{border-color:var(--blue);color:var(--blue);transform:translateY(-2px)}
+
+/* Cards with cursor spotlight */
+.card{position:relative;background:#fff;border:1px solid var(--line);border-radius:14px;box-shadow:0 10px 30px rgba(46,20,70,.07);transition:transform .35s var(--ease),box-shadow .35s ease,border-color .35s ease}
+.card::before{content:'';position:absolute;inset:0;border-radius:inherit;pointer-events:none;opacity:0;transition:opacity .35s ease;background:radial-gradient(360px circle at var(--mx,50%) var(--my,50%),#5b2a8612,transparent 45%)}
+.card:hover{transform:translateY(-5px);box-shadow:0 22px 46px rgba(46,20,70,.13);border-color:#e3d6ef}
+.card:hover::before{opacity:1}
+
+/* Scroll reveals */
+.reveal-on-scroll{opacity:0;transform:translateY(28px);filter:blur(6px);transition:opacity .8s ease,transform .8s var(--ease),filter .8s ease}
+.reveal-on-scroll.is-visible{opacity:1;transform:none;filter:none}
+.reveal-stagger>*{opacity:0;transform:translateY(22px) scale(.98);transition:opacity .65s ease,transform .65s var(--ease)}
+.reveal-stagger.is-visible>*{opacity:1;transform:none}
+.reveal-stagger.is-visible>*:nth-child(2){transition-delay:90ms}
+.reveal-stagger.is-visible>*:nth-child(3){transition-delay:180ms}
+.reveal-stagger.is-visible>*:nth-child(4){transition-delay:270ms}
+.reveal-stagger.is-visible>*:nth-child(5){transition-delay:360ms}
+.reveal-stagger.is-visible>*:nth-child(6){transition-delay:450ms}
+/* Hover lift still works after a staggered reveal */
+.reveal-stagger.is-visible>.card:hover{transform:translateY(-5px);transition-delay:0ms}
+
+/* Entrance animation for above-the-fold content */
+.load-in>*{animation:rise .9s var(--ease) both}
+.load-in>*:nth-child(2){animation-delay:.08s}
+.load-in>*:nth-child(3){animation-delay:.16s}
+.load-in>*:nth-child(4){animation-delay:.24s}
+.load-in>*:nth-child(5){animation-delay:.32s}
+.load-in>*:nth-child(6){animation-delay:.4s}
+@keyframes rise{from{opacity:0;transform:translateY(22px);filter:blur(8px)}to{opacity:1;transform:none;filter:none}}
+
+/* Shared inner-page banner with drifting light */
+.page-hero{position:relative;overflow:hidden;padding:88px 0 80px;background:linear-gradient(110deg,#faf7fc,#f3ecf9);border-bottom:1px solid #e8edf8}
+.page-hero::before,.page-hero::after{content:'';position:absolute;border-radius:50%;filter:blur(60px);pointer-events:none;animation:drift 16s ease-in-out infinite alternate}
+.page-hero::before{width:420px;height:420px;right:-80px;top:-160px;background:#dcc8ee}
+.page-hero::after{width:300px;height:300px;right:240px;bottom:-200px;background:#ffd9cc;animation-delay:-8s}
+.page-hero>.container{position:relative;z-index:1}
+.page-hero h1{font:800 clamp(36px,5vw,56px)/1.08 Manrope,sans-serif;letter-spacing:-.05em;max-width:800px;margin:16px 0}
+.page-hero p{color:var(--muted);font-size:17px;line-height:1.7;max-width:680px;margin:0}
+.page-hero .actions{display:flex;gap:12px;flex-wrap:wrap;margin-top:28px}
+@keyframes drift{to{transform:translate(-60px,40px) scale(1.15)}}
+.page-hero>.container>*{animation:rise .9s var(--ease) both}
+.page-hero>.container>*:nth-child(2){animation-delay:.08s}
+.page-hero>.container>*:nth-child(3){animation-delay:.16s}
+.page-hero>.container>*:nth-child(4){animation-delay:.24s}
+.page-hero>.container>*:nth-child(5){animation-delay:.32s}
+
+.chip{display:inline-flex;align-items:center;gap:7px;background:#fff3ee;color:#b8432a;border-radius:30px;padding:6px 12px;font-size:11px;font-weight:700;letter-spacing:.04em}
+.chip::before{content:'';width:7px;height:7px;border-radius:50%;background:currentColor;animation:ping 2s ease-in-out infinite}
+@keyframes ping{0%{box-shadow:0 0 0 0 currentColor}70%,100%{box-shadow:0 0 0 6px transparent}}
+
+/* Top scroll progress bar (supported browsers only) */
+.scroll-progress{display:none}
+@supports (animation-timeline: scroll()){
+  .scroll-progress{display:block;position:fixed;top:0;left:0;right:0;height:3px;z-index:60;transform-origin:0 50%;background:linear-gradient(90deg,#5b2a86,#ff7a59);animation:progress linear both;animation-timeline:scroll(root)}
+}
+@keyframes progress{from{transform:scaleX(0)}to{transform:scaleX(1)}}
+
+/* Smooth page-to-page transitions (Chrome, Edge, Safari 18.2+; others just navigate normally) */
+@view-transition{navigation:auto}
+::view-transition-old(root){animation:vt-out .22s ease both}
+::view-transition-new(root){animation:vt-in .4s var(--ease) both}
+@keyframes vt-out{to{opacity:0;transform:translateY(-8px)}}
+@keyframes vt-in{from{opacity:0;transform:translateY(12px)}}
+
+@media(max-width:700px){.container{width:min(100% - 32px,1160px)}.section{padding:60px 0}.section-head{display:block}.section-head p{margin-top:12px}.page-hero{padding:60px 0}.page-hero p{font-size:15px}}
+
+@media(prefers-reduced-motion:reduce){
+  html{scroll-behavior:auto}
+  *,*::before,*::after{animation:none!important;transition-duration:.01ms!important;scroll-behavior:auto!important}
+  .reveal-on-scroll,.reveal-stagger>*{opacity:1!important;transform:none!important;filter:none!important}
+  .scroll-progress{display:none}
+  ::view-transition-old(root),::view-transition-new(root){animation:none!important}
+}
+</style>

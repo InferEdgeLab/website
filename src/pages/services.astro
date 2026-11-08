@@ -1,0 +1,48 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import Pricing from '../components/Pricing.astro';
+import { capabilities } from '../data/site';
+---
+<BaseLayout title="GPU Inference Optimization Services & Pricing | InferEdgeLab" description="Fixed-price inference cost audits, model optimization, GPU right-sizing, serving and batching, and regression checks for vision and embedding models on cloud GPUs." offers={true}>
+  <Header />
+  <main>
+    <section class="page-hero">
+      <div class="container">
+        <div class="eyebrow">SERVICES</div>
+        <h1>Same traffic. Fewer GPU-hours.</h1>
+        <p>We focus on one thing: making vision and embedding models cheaper and faster to serve on cloud GPUs, with every gain measured against your baseline and checked on your own data.</p>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="container grid reveal-stagger">
+        {capabilities.map((c) => (
+          <article class="card item" id={c.id}>
+            <div class="item-top"><span>{c.number}</span><span class="icon" aria-hidden="true">{c.icon}</span></div>
+            <h2>{c.title}</h2>
+            <p>{c.text}</p>
+            <div class="tags">{c.tags.map((t) => <small>{t}</small>)}</div>
+          </article>
+        ))}
+      </div>
+    </section>
+
+    <Pricing />
+  </main>
+  <Footer />
+</BaseLayout>
+
+<style>
+.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+.item{padding:28px;display:flex;flex-direction:column;scroll-margin-top:90px}
+.item-top{display:flex;justify-content:space-between;align-items:center;color:var(--blue);font-weight:700;font-size:13px}
+.icon{width:42px;height:42px;border-radius:12px;background:#f3ecf9;display:grid;place-items:center;font-size:22px}
+.item h2{font:700 21px Manrope;margin:20px 0 8px}
+.item p{color:var(--muted);line-height:1.7;font-size:14px;margin:0;flex:1}
+.tags{display:flex;gap:8px;flex-wrap:wrap;margin-top:20px}
+.tags small{background:#f6f0fa;color:#5e4a72;border-radius:30px;padding:7px 10px;font-size:11px;font-weight:600}
+@media(max-width:900px){.grid{grid-template-columns:1fr 1fr}}
+@media(max-width:620px){.grid{grid-template-columns:1fr}}
+</style>

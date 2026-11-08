@@ -1,0 +1,39 @@
+---
+/** Proof section (item 6). Placeholder cards until `caseStudies` in src/data/site.ts are published. */
+import { caseStudies } from '../data/site';
+---
+<section class="section proof" id="case-studies">
+  <div class="container">
+    <div class="section-head reveal-on-scroll">
+      <div>
+        <div class="eyebrow">PROOF</div>
+        <h2>Benchmarks we're publishing</h2>
+      </div>
+      <p>We're publishing our own benchmarks with the GPU, runtime versions and batch sizes stated, so every number can be checked.</p>
+    </div>
+    <div class="studies reveal-stagger">
+      {caseStudies.map((c) => (
+        <article class="card study">
+          <span class:list={['status', { live: c.status === 'published' }]}>{c.status === 'published' ? 'Published' : 'Benchmark in progress'}</span>
+          <h3>{c.model}</h3>
+          <p class="hw">{c.hardware}</p>
+          {c.result ? <p class="result">{c.result}</p> : <p class="measures">{c.measures}</p>}
+          {c.href && <a class="more" href={c.href}>Read the case study →</a>}
+        </article>
+      ))}
+    </div>
+  </div>
+</section>
+
+<style>
+.studies{display:grid;grid-template-columns:repeat(2,1fr);gap:18px}
+.study{padding:26px}
+.status{display:inline-block;font-size:11px;font-weight:700;letter-spacing:.04em;border-radius:30px;padding:5px 11px;background:#f6f0fa;color:#6f5f82}
+.status.live{background:#e8f7ef;color:#1d7a4c}
+.study h3{font:700 20px Manrope;margin:16px 0 4px}
+.hw{font-size:13px;font-weight:600;color:var(--blue);margin:0 0 12px}
+.measures,.result{font-size:14px;line-height:1.65;color:var(--muted);margin:0}
+.result{font:700 17px/1.5 Manrope;color:var(--ink)}
+.more{display:inline-block;margin-top:16px;font-size:13px;font-weight:700;color:var(--blue)}
+@media(max-width:760px){.studies{grid-template-columns:1fr}}
+</style>

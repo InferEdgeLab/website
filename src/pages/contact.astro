@@ -1,0 +1,147 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import { site, contactTopics, bookingHref, web3formsAccessKey } from '../data/site';
+
+// Web3Forms delivers the email directly, so it works for every visitor, not just those
+// with a configured email app. Falls back to the old mailto: behavior until a key is set
+// (see PUBLIC_WEB3FORMS_ACCESS_KEY in src/data/site.ts).
+const usingWeb3Forms = Boolean(web3formsAccessKey);
+const formAction = usingWeb3Forms ? 'https://api.web3forms.com/submit' : `mailto:${site.email}`;
+---
+<BaseLayout title="Free GPU Cost Check & Contact | InferEdgeLab" description="Request a free GPU cost check, book an Inference Cost Audit, or talk to InferEdgeLab about cutting the cost of your vision and embedding models.">
+  <Header />
+  <main>
+    <section class="page-hero">
+      <div class="container">
+        <div class="eyebrow">CONTACT</div>
+        <h1>Tell us what you are building.</h1>
+        <p>Share a little about your model, traffic, and GPU setup. We reply within two working days with honest next steps, starting with a free cost check if it fits.</p>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="container contact-grid">
+        <div>
+          <h2>Start a conversation</h2>
+          <p class="muted">For business and technical enquiries, email us directly:</p>
+          <a class="email" href={`mailto:${site.email}`}>{site.email}</a>
+          <p class="muted book">Prefer to talk? <a href={bookingHref}>Book a 20-minute call →</a></p>
+          <ul class="expect">
+            <li><span class="check">✓</span>A reply from an engineer, not a sales script</li>
+            <li><span class="check">✓</span>Happy to sign a mutual NDA before details</li>
+            <li><span class="check">✓</span>No confidential data needed for a first call</li>
+            <li><span class="check">✓</span>Fixed prices, agreed before any work starts</li>
+          </ul>
+        </div>
+
+        <form
+          class="card form"
+          id="contact-form"
+          method="post"
+          action={formAction}
+          enctype={usingWeb3Forms ? undefined : 'text/plain'}
+          data-service={usingWeb3Forms ? 'web3forms' : undefined}
+        >
+          {usingWeb3Forms && (
+            <>
+              <input type="hidden" name="access_key" value={web3formsAccessKey} />
+              <input type="hidden" name="subject" value={`New enquiry from ${site.name} website`} />
+              <input type="hidden" name="from_name" value={`${site.name} website`} />
+              {/* Spam trap: hidden from people, bots tend to tick it. */}
+              <input type="checkbox" name="botcheck" class="botcheck" tabindex={-1} autocomplete="off" aria-hidden="true" />
+            </>
+          )}
+          <label>Your name<input name="name" autocomplete="name" required /></label>
+          <label>Work email<input name="email" type="email" autocomplete="email" required /></label>
+          <label>Company<input name="company" autocomplete="organization" /></label>
+          <label>What would you like to discuss?
+            <select name="topic" id="topic">
+              {contactTopics.map((t) => <option value={t.label} data-key={t.value}>{t.label}</option>)}
+            </select>
+          </label>
+          <label>Brief project context<textarea name="message" rows="4" required placeholder="Model type, rough traffic, instance type and count, monthly GPU bill, and what you would like to improve."></textarea></label>
+          <button class="btn btn-primary" type="submit">Send enquiry →</button>
+          <p class="form-status" role="status" aria-live="polite" hidden></p>
+          <small>
+            {usingWeb3Forms
+              ? 'Sends directly to our inbox, without leaving this page.'
+              : 'Submitting opens your email app with your message ready to send.'}
+            {' '}Please do not include confidential model files or credentials.
+          </small>
+        </form>
+      </div>
+    </section>
+  </main>
+  <Footer />
+</BaseLayout>
+
+<script>
+// Preselect a topic from links like /contact?topic=check
+const key = new URLSearchParams(window.location.search).get('topic');
+const select = document.getElementById('topic') as HTMLSelectElement | null;
+const option = key && select?.querySelector<HTMLOptionElement>(`option[data-key="${CSS.escape(key)}"]`);
+if (select && option) select.value = option.value;
+
+// Send through Web3Forms without leaving the page, and show the result inline.
+const form = document.getElementById('contact-form') as HTMLFormElement | null;
+const statusEl = form?.querySelector<HTMLElement>('.form-status');
+const button = form?.querySelector<HTMLButtonElement>('button[type="submit"]');
+const fallbackEmail = document.querySelector<HTMLAnchorElement>('.email')?.textContent ?? '';
+
+const showStatus = (text: string, ok: boolean) => {
+  if (!statusEl) return;
+  statusEl.textContent = text;
+  statusEl.classList.toggle('ok', ok);
+  statusEl.classList.toggle('error', !ok);
+  statusEl.hidden = false;
+};
+
+if (form?.dataset.service === 'web3forms') {
+  form.addEventListener('submit', async (event) => {
+    event.preventDefault();
+    if (button) { button.disabled = true; button.textContent = 'Sending…'; }
+    statusEl?.setAttribute('hidden', '');
+    try {
+      const response = await fetch(form.action, {
+        method: 'POST',
+        headers: { Accept: 'application/json' },
+        body: new FormData(form),
+      });
+      const result = await response.json().catch(() => ({}));
+      if (!response.ok || !result.success) throw new Error(result.message || 'Send failed');
+      form.reset();
+      showStatus('Thanks - your message has been sent. We will get back to you soon.', true);
+    } catch {
+      showStatus(`Sorry, your message could not be sent. Please email us at ${fallbackEmail}.`, false);
+    } finally {
+      if (button) { button.disabled = false; button.textContent = 'Send enquiry →'; }
+    }
+  });
+}
+</script>
+
+<style>
+.contact-grid{display:grid;grid-template-columns:.85fr 1.15fr;gap:70px}
+.contact-grid h2{font:800 28px Manrope;letter-spacing:-.03em;margin-top:0}
+.email{color:var(--blue);font-weight:700;font-size:17px}
+.book{margin-top:14px}
+.book a{color:var(--blue);font-weight:700}
+.expect{list-style:none;padding:0;margin:30px 0 0;display:grid;gap:14px;font-size:14px;color:#4f5f7c}
+.expect li{display:flex;gap:10px;align-items:center}
+.check{flex:0 0 auto;width:20px;height:20px;border-radius:50%;background:#fff0eb;color:#d4553a;display:grid;place-items:center;font-weight:700;font-size:11px}
+.form{padding:28px;display:grid;gap:15px}
+.form:hover{transform:none}
+.form label{display:grid;gap:7px;font-size:12px;font-weight:700;color:#485773}
+.form input,.form select,.form textarea{width:100%;border:1px solid #dce3ef;border-radius:8px;padding:12px;color:var(--ink);background:#fff;outline:none}
+.form textarea{resize:vertical}
+.form input:focus,.form select:focus,.form textarea:focus{border-color:var(--blue);box-shadow:0 0 0 3px #5b2a8617}
+.form small{font-size:11px;color:#8994a8;line-height:1.5}
+.form button:disabled{opacity:.7;cursor:wait}
+.botcheck{display:none}
+.form-status{margin:0;padding:12px 14px;border-radius:8px;font-size:13px;font-weight:600;line-height:1.5}
+.form-status.ok{background:#e8f7ef;color:#1d7a4c}
+.form-status.error{background:#fdecee;color:#a3202f}
+@media(max-width:760px){.contact-grid{grid-template-columns:1fr;gap:30px}}
+</style>

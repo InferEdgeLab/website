@@ -1,0 +1,36 @@
+---
+/** Animated brand tagline: each word lights up in turn. */
+import { motto } from '../data/site';
+
+interface Props {
+  tone?: 'dark' | 'light';
+  size?: 'sm' | 'md';
+}
+
+const { tone = 'dark', size = 'md' } = Astro.props;
+---
+<p class:list={['motto', `motto-${tone}`, `motto-${size}`]} aria-label={motto.join('. ') + '.'}>
+  {motto.map((word, i) => (
+    <>
+      {i > 0 && <span class="sep" aria-hidden="true"></span>}
+      <span class="word" style={`--i:${i}`} aria-hidden="true"><i></i>{word}</span>
+    </>
+  ))}
+</p>
+
+<style>
+.motto{display:inline-flex;align-items:center;flex-wrap:wrap;gap:10px;margin:0;padding:7px 14px 7px 10px;border-radius:40px;background:#ffffffb3;border:1px solid #ebe2f2;box-shadow:0 6px 18px rgba(46,20,70,.06);backdrop-filter:blur(8px);font:700 12px Manrope,sans-serif;letter-spacing:.06em;text-transform:uppercase}
+.motto-sm{font-size:11px;padding:5px 12px 5px 8px;gap:8px}
+.motto-light{background:#ffffff0f;border-color:#ffffff24;box-shadow:none}
+.word{display:inline-flex;align-items:center;gap:7px;color:#8a96ad;animation:word-on 6s ease-in-out infinite;animation-delay:calc(var(--i) * 2s)}
+.word i{width:7px;height:7px;border-radius:50%;background:#dbd1e4;animation:dot-on 6s ease-in-out infinite;animation-delay:calc(var(--i) * 2s)}
+.sep{width:18px;height:1px;background:linear-gradient(90deg,#d9cfe3,#5b2a86,#d9cfe3);background-size:200% 100%;animation:sep-flow 2s linear infinite}
+.motto-light .word{color:#9e8fb0}
+.motto-light .sep{background:linear-gradient(90deg,#ffffff30,#ffb199,#ffffff30);background-size:200% 100%}
+@keyframes word-on{0%,100%{color:#8a96ad}6%,30%{color:var(--ink)}38%{color:#8a96ad}}
+.motto-light .word{animation-name:word-on-light}
+@keyframes word-on-light{0%,100%{color:#9e8fb0}6%,30%{color:#fff}38%{color:#9e8fb0}}
+@keyframes dot-on{0%,100%{background:#dbd1e4;box-shadow:none}6%,30%{background:#ff7a59;box-shadow:0 0 0 4px #ff7a5926}38%{background:#dbd1e4;box-shadow:none}}
+@keyframes sep-flow{to{background-position:-200% 0}}
+@media(prefers-reduced-motion:reduce){.word,.word i,.sep{animation:none}.word{color:var(--ink)}.motto-light .word{color:#fff}.word i{background:#ff7a59}}
+</style>

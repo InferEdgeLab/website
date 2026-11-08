@@ -1,0 +1,54 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import { site, cloudflareAnalyticsToken } from '../data/site';
+const updated = 'November 2026';
+const analyticsOn = Boolean(cloudflareAnalyticsToken);
+---
+<BaseLayout title="Privacy" description={`How ${site.name} handles information from website visitors and enquiries.`}>
+  <Header />
+  <main class="container legal">
+    <div class="eyebrow">LEGAL</div>
+    <h1>Privacy notice</h1>
+    <p class="muted">Last updated: {updated}</p>
+
+    <h2>Who we are</h2>
+    <p>{site.name} ("we", "us") provides AI inference and GPU cost optimization services. We are based in India. This notice explains what happens to information you share with us through this website or by email, wherever in the world you are contacting us from.</p>
+
+    <h2>What we collect</h2>
+    <p>
+      {analyticsOn
+        ? 'This website uses Cloudflare Web Analytics to understand overall traffic, such as page views and referring sites. It does not use cookies, does not collect personal information, and does not track you across other websites.'
+        : 'This website does not use cookies, analytics, or tracking scripts of any kind.'}
+      {' '}We only receive the information you choose to send us through the contact form or by email: your name, work email, company, and the details of your enquiry.
+    </p>
+
+    <h2>Why we are allowed to use it (legal basis)</h2>
+    <p>We process enquiry information on the basis of our legitimate interest in responding to business enquiries you have initiated, and, once an engagement starts, to perform the contract you have agreed with us. You can object to processing based on legitimate interest at any time using the contact details below.</p>
+
+    <h2>How we use it</h2>
+    <p>We use enquiry information only to reply to you, assess whether we can help, and prepare or deliver an engagement you ask for. We do not sell it, profile you with it, or use it for unrelated marketing.</p>
+
+    <h2>Service providers</h2>
+    <p>This website is hosted on GitHub Pages, which may log basic technical data such as IP addresses to keep the service secure. The contact form is submitted through Web3Forms, which delivers your message to our inbox by email and briefly retains a copy for spam prevention. Call bookings are handled by Zoho Bookings, which stores the name, email and time slot you submit to schedule the call. Our email is provided by Zoho Mail. None of these providers may use your information for their own purposes.</p>
+
+    <h2>International transfers</h2>
+    <p>Because we work with clients worldwide, information you send us may be processed on servers located outside your own country, including in India, the United States, or elsewhere our service providers operate. We only share information with the service providers listed above, each bound by their own data protection terms.</p>
+
+    <h2>Retention</h2>
+    <p>We keep enquiry emails for as long as needed to respond and for normal business records, and no longer than necessary for that purpose. Model files or data shared during an engagement are handled under the agreement for that engagement and deleted within 7 days of delivery unless you ask us in writing to keep them.</p>
+
+    <h2>Please do not send</h2>
+    <p>Do not send confidential model files, credentials, or sensitive personal information (such as health, financial, or government ID data) through this website or a first email.</p>
+
+    <h2>Your rights</h2>
+    <p>Depending on where you are, you may have the right to ask what information we hold about you, to get a copy of it, to have it corrected or deleted, to object to or restrict our use of it, or - if you are in the European Economic Area or UK - to lodge a complaint with your local data protection authority. To exercise any of these rights, email <a href={`mailto:${site.email}`}>{site.email}</a> and we will respond within a reasonable time, and in any case within 30 days.</p>
+
+    <h2>Contact</h2>
+    <p>Questions about this notice, or requests about your information, can be sent to <a href={`mailto:${site.email}`}>{site.email}</a>.</p>
+  </main>
+  <Footer />
+</BaseLayout>
+
+<style>.legal{padding-top:70px;padding-bottom:80px;max-width:850px}.legal h1{font:800 44px Manrope;letter-spacing:-.05em;margin:12px 0 6px}.legal h2{font:700 20px Manrope;margin-top:34px}.legal p{font-size:14px;line-height:1.8;color:#596782}.legal a{color:var(--blue)}</style>
